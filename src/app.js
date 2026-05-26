@@ -1,23 +1,24 @@
-const express=require('express');
-const helmet=require(`helmet`);
-const cors=require(`cors`);
-const dotenv=require(`dotenv`);
-const checkRoute=require(`./routes/check`);
+const dotenv = require('dotenv')
+dotenv.config()
 
-dotenv.config();
+const express = require('express')
+const helmet = require('helmet')
+const cors = require('cors')
+const checkRoute = require('./routes/check')
+const connectDB = require('./config/db')
 
-const app=express();
+const app = express()
 
-// Middleware
 app.use(helmet())
-app.use(express.json()) // To parse the incoming data to json
+app.use(express.json())
+app.use('/api', checkRoute)
 
-app.use('/api',checkRoute);
+connectDB()
 
-const PORT=process.env.PORT || 3000;
+const PORT = process.env.PORT || 3000
 
-app.listen(PORT,()=>{
-    console.log(`YourRateLimiter is running on port ${PORT}`);
-});
+app.listen(PORT, () => {
+  console.log(`YourRateLimiter is running on port ${PORT}`)
+})
 
-module.exports=app;
+module.exports = app
