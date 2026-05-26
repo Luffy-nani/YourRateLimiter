@@ -2,6 +2,7 @@ const express=require('express');
 const helmet=require(`helmet`);
 const cors=require(`cors`);
 const dotenv=require(`dotenv`);
+const checkRoute=require(`./routes/check`);
 
 dotenv.config();
 
@@ -11,6 +12,7 @@ const app=express();
 app.use(helmet())
 app.use(express.json()) // To parse the incoming data to json
 
+app.use('/api',checkRoute);
 
 const PORT=process.env.PORT || 3000;
 
