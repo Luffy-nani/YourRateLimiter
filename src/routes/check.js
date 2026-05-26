@@ -1,11 +1,12 @@
 const express = require('express')
 const router = express.Router()
 const fixedWindow = require('../algorithms/fixedWindow')
+const slidingWindow=require('../algorithms/slidingWindow');
 
 router.post('/check', async (req, res) => {
   try {
     const { userId, limit, windowSize } = req.body
-    const result = await fixedWindow(userId, limit, windowSize)
+    const result = await slidingWindow(userId, limit, windowSize)
     res.json(result)
   } catch (err) {
     res.status(500).json({ error: err.message })
