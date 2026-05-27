@@ -8,12 +8,14 @@ const registerClient = async (req, res) => {
 
     const apiKey = 'rl_' + crypto.randomBytes(32).toString('hex')
     const hashedApiKey = await bcrypt.hash(apiKey, 10)
+    const keyPrefix = apiKey.substring(0, 10);
 
     const client = new Client({
       appName,
       rules,
       apiKey: hashedApiKey,
-      isActive: true
+      isActive: true,
+      keyPrefix
     })
 
     await client.save()

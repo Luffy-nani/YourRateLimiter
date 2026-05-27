@@ -25,7 +25,11 @@ const clientSchema = new mongoose.Schema({
   createdAt: {
     type: Date,
     default: Date.now
-  }
+  },
+    keyPrefix: {
+    type: String,
+    required: true
+    }
 })
 
 module.exports = mongoose.model('Client', clientSchema)
