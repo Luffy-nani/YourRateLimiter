@@ -23,7 +23,11 @@ router.post('/check', verifyKey, async (req, res) => {
 
     const algo = algorithms[rule.algorithm]
     const result = await algo(userId, rule.limit, rule.windowSize)
-
+    res.set({
+      'X-RateLimit-Limit': rule.limit,
+      'X-RateLimit-Remaining': result.remaining,
+      'X-RateLimit-Reset': result.resetTime
+    });
     res.json(result)
   } catch (err) {
     res.status(500).json({ error: err.message })
