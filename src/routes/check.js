@@ -3,6 +3,7 @@ const express = require('express')
 const router = express.Router()
 const slidingWindow = require('../algorithms/slidingWindow')
 const fixedWindow = require('../algorithms/fixedWindow')
+const AuditLog = require('../models/auditLog')
 
 const algorithms = {
   sliding: slidingWindow,
@@ -28,6 +29,14 @@ router.post('/check', verifyKey, async (req, res) => {
       'X-RateLimit-Remaining': result.remaining,
       'X-RateLimit-Reset': result.resetTime
     });
+
+    AuditLog.create({
+      clientId: req.client._id,
+      userId,
+      endpoint,
+      allowed: result.allowed,
+      remaining: result.remaining
+    }).catch(err => console.error(err));
     res.json(result)
   } catch (err) {
     res.status(500).json({ error: err.message })
