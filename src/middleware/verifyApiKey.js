@@ -1,4 +1,4 @@
-const bcrypt=require(`bcryptjs`);
+const crypto=require(`crypto`);
 const Client=require(`../models/client`);
 
 const verifyApiKey=async(req,res,next)=>{
@@ -7,17 +7,11 @@ const verifyApiKey=async(req,res,next)=>{
     if(!apiKey){
         return res.status(401).json({error:"API key required"});
     }
-
-    const keyPrefix=apiKey.substring(0,10);
-    const client=await Client.findOne({keyPrefix});
+    const hashedKey = crypto.createHash('sha256').update(apiKey).digest('hex')
+    const client = await Client.findOne({ apiKey: hashedKey })
 
     if(!client){
         return res.status(401).json({error:"Invalid API Key"});
-    }
-
-    const isValid=bcrypt.compare(apiKey,client.apiKey);
-    if(!isValid){
-        return res.status(401).json({error:"Invalid API key"});
     }
 
     if(!client.isActive){
